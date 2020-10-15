@@ -7,7 +7,7 @@ require 'csv'
 
 INPUT = InputListFetcher.read_from_file
 
-OUTPUT_FILENAME = "output_#{Time.now.localtime.strftime('%Y%m%d-%H:%M:%S')}.csv"
+OUTPUT_FILENAME = "output_#{Time.now.localtime.strftime('%Y%m%d-%H.%M.%S')}.csv"
 OUTPUT_FILE = File.expand_path('../../../' + OUTPUT_FILENAME, __FILE__)
 
 # Testing mode (offline, work with cache)
