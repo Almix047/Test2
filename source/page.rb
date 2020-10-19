@@ -20,7 +20,7 @@ class Page
 
   def initialize(link)
     @parser = PageParser.new(link)
-    @date = table_date
+    @date = Time.now.localtime
   end
 
   def valid_page?
@@ -43,8 +43,20 @@ class Page
     parser.fetch_page.xpath(ER_XPATH).text.strip
   end
 
+  def table_today_followers
+    today = date.strftime('%Y-%m-%d')
+    date_xpath = "//div[contains(text(), '#{today}')]/../..//span"
+    flw = parser.fetch_page.xpath(date_xpath)
+    if flw.any?
+      flw[0].text.tr(',', '')
+    else
+      'nevalid'
+    end
+  end
+
   def table_daily
-    date_xpath = "//div[contains(text(), '#{date}')]/../..//span"
+    yesterday = (date - DAY).strftime('%Y-%m-%d')
+    date_xpath = "//div[contains(text(), '#{yesterday}')]/../..//span"
     parser.fetch_page.xpath(date_xpath)
   end
 
@@ -54,13 +66,5 @@ class Page
 
   def table_media_avg
     parser.fetch_page.xpath(TABLE_AVG_FOLLOWERS_XPATH)[2].text.tr(',', '')
-  end
-
-  private
-
-  def table_date
-    current_time = Time.now.localtime
-    yesterday = current_time - DAY
-    yesterday.strftime('%Y-%m-%d')
   end
 end
